@@ -1,52 +1,59 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI; // Required to talk to UI Buttons!
+using UnityEngine.UI; 
 
 public class GameManager : MonoBehaviour
 {
     [Header("Menu Buttons")]
-    public Button loadGameButton; // We need this reference to gray it out
+    public Button loadGameButton; 
 
-    [Header("Menu Panels (For Later)")]
+    [Header("Menu Panels")]
     public GameObject bioDexPanel; 
     public GameObject creditsPanel; 
 
+    // Type the EXACT name of your gameplay scene in the Unity Inspector!
+    [Header("Scene To Load")]
+    public string gameSceneName = "MainGame"; 
+
     void Start()
     {
-        // 1. Gray out the Load Game button automatically!
+        // 1. Force the game to unpause just in case it got stuck
+        Time.timeScale = 1f;
+
+        // 2. Gray out the Load Game button
         if (loadGameButton != null)
         {
             loadGameButton.interactable = false;
         }
 
-        // 2. Make sure our pop-up panels are hidden when the menu starts
+        // 3. Hide pop-up panels
         if (bioDexPanel != null) bioDexPanel.SetActive(false);
         if (creditsPanel != null) creditsPanel.SetActive(false);
     }
 
-    // Connect this to the NEW GAME button
     public void StartNewGame()
     {
         Debug.Log("Starting Santuwaryo...");
-        // Loads the actual gameplay scene (Make sure your jungle scene is Index 1 in Build Settings!)
-        SceneManager.LoadScene(1);
+        
+        // CRITICAL FIX: Ensure time is moving before loading the scene
+        Time.timeScale = 1f; 
+        
+        // Loads the exact scene name instead of relying on the Build Index number
+        SceneManager.LoadScene(gameSceneName);
     }
 
-    // Connect this to the BIO-DEX button
     public void OpenBioDex()
     {
         Debug.Log("Opening Bio-Dex...");
-        // if (bioDexPanel != null) bioDexPanel.SetActive(true);
+        if (bioDexPanel != null) bioDexPanel.SetActive(true);
     }
 
-    // Connect this to the CREDITS button
     public void OpenCredits()
     {
         Debug.Log("Opening Credits...");
-        // if (creditsPanel != null) creditsPanel.SetActive(true);
+        if (creditsPanel != null) creditsPanel.SetActive(true);
     }
 
-    // Optional: Connect this to a Quit button if you make one
     public void QuitGame()
     {
         Debug.Log("Game Quitting!");
